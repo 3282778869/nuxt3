@@ -1,0 +1,57 @@
+stages:
+  - build
+  - deploy
+build_dev_job:
+  stage: build
+  tags:
+    - dnsla
+    - dev
+  before_script:
+    - MICRO_NAME=micro-ssr
+    - MICRO_TAG=$(git rev-parse --short HEAD)
+  script:
+    - sudo docker build --build-arg BUILD_ENV=dev -t dns.la/backend/$MICRO_NAME:$MICRO_TAG .
+  only:
+    - dev
+deploy_dev_job:
+  stage: deploy
+  tags:
+    - dnsla
+    - dev
+  before_script:
+    - MICRO_NAME=micro-ssr
+    - MICRO_TAG=$(git rev-parse --short HEAD)
+  script:
+    - |
+      if [[ -f /dnsla/micros/$MICRO_NAME/docker-compose.yml ]]
+      then
+        sudo docker compose -f /dnsla/micros/$MICRO_NAME/docker-compose.yml down || echo "micro $MICRO_NAME down failed"
+        rm -f /dnsla/micros/$MICRO_NAME/docker-compose.yml
+      else
+        mkdir -p /dnsla/micros/$MICRO_NAME
+      fi
+    - |
+      cat > /dnsla/micros/$MICRO_NAME/docker-compose.yml <<EOF
+      version: "3.9"
+      services:
+        $MICRO_NAME:
+          image: dns.la/backend/$MICRO_NAME:$MICRO_TAG
+          hostname: $MICRO_NAME
+          container_name: $MICRO_NAME
+          volumes:
+            - ./ssr.dev.dns.la.conf:/etc/nginx/conf.d/ssr.dev.dns.la.conf
+          restart: always
+          networks:
+            vpn:
+      networks:
+        vpn:
+          external: true
+          name: vpn
+      command:
+        - node
+        - .output/server/index.mjs
+      EOF
+    - sudo docker compose -f /dnsla/micros/$MICRO_NAME/docker-compose.yml up -d
+    - sudo docker exec nginx nginx -s reload
+  only:
+    - dev
