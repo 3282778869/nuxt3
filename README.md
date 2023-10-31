@@ -1,4 +1,4 @@
-# Nuxt3+ts 实现ssr渲染
+# Nuxt3+ts 实现ssr渲染 （简单搭建）
 
 ## 项目初始化
 ```bash
