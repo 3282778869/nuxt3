@@ -1,11 +1,6 @@
-# Nuxt 3 Minimal Starter
+# Nuxt3+ts 实现ssr渲染
 
-Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
-
-## Setup
-
-Make sure to install the dependencies:
-
+## 项目初始化
 ```bash
 # npm
 npm install
@@ -20,10 +15,7 @@ yarn install
 bun install
 ```
 
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
+## 项目运行命令
 ```bash
 # npm
 npm run dev
@@ -38,9 +30,10 @@ yarn dev
 bun run dev
 ```
 
-## Production
+## 本地运行地址
+Start the development server on `http://localhost:3000`:
 
-Build the application for production:
+## 项目打包命令 打包以后出现 `.output` 文件
 
 ```bash
 # npm
@@ -55,21 +48,3 @@ yarn build
 # bun
 bun run build
 ```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
